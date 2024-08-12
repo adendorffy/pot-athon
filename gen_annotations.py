@@ -1,7 +1,7 @@
 import os
 from ultralytics import YOLO
 model = YOLO('/home/karen/Desktop/HACKATHON/pot-athon/fine-tune-training/runs/detect/train19/weights/best.pt')
-test_images_dir = 'raw_test_images'
+test_images_dir = 'raw_images'
 output_annotation_dir = 'results/annotation'
 output_images_dir = 'results/images'
 
