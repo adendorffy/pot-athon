@@ -1,4 +1,5 @@
-#a quick script written by ChatGPT that plots the annotations on the imagaes
+#3333333333333333333333333333333333333333333333333333333333333333333333333
+# a quick script written by ChatGPT that plots the annotations on the imagaes
 
 import os
 import cv2
@@ -50,12 +51,12 @@ def plot_annotations(image_dir, annotation_dir, output_dir, classes):
         cv2.imwrite(output_path, image)
 
 # Define paths
-train_image_dir = 'data/train_images'
-train_annotation_dir = 'data/train-annotations'
+train_image_dir = 'train_images'
+train_annotation_dir = 'train-annotations'
 train_output_dir = 'annotated-images/train'
 
-test_image_dir = 'data/test_images'
-test_annotation_dir = 'data/test-annotations'
+test_image_dir = 'test_images'
+test_annotation_dir = 'test-annotations'
 test_output_dir = 'annotated-images/test'
 
 # Define class names
