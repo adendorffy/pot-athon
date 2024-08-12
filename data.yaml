@@ -1,5 +1,0 @@
-path: /home/karen/Desktop/HACKATHON/pot-athon/datasets/dataset
-train: images/train
-val: images/val
-nc: 3
-names: ["0", "1", "2"]
