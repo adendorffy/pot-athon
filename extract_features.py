@@ -39,8 +39,8 @@ def get_real_dimensions(image_path, annotation_path):
     return real_width, real_height 
 
 
-image_dir = "data/train_images"
-annotation_dir = "data/train-annotations"
+image_dir = "data/test_images"
+annotation_dir = "data/test-annotations"
 labels_csv = "data/train_labels.csv"
 
 
@@ -67,5 +67,5 @@ for image_file in os.listdir(image_dir):
             "Bags": bags
         })
 df = pd.DataFrame(data)
-output_csv = "train_features.csv"
+output_csv = "test_features.csv"
 df.to_csv(output_csv, index=False)
