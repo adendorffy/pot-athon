@@ -1,3 +1,7 @@
+torch
+torchvision
+opencv-python
+
 certifi==2024.7.4
 charset-normalizer==3.3.2
 contourpy==1.2.1

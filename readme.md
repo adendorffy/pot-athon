@@ -15,3 +15,9 @@
 
 and the labels/annotations must be in format: <class_id> <x_center> <y_center> <width> <height>
 1239, 1188, 1450 does not have annotation.
+
+## Generate pothole mask
+
+Install torch, torchvision and openvcv-python (also in requirements.txt)
+Run: python3 gen_mask.py
+Outputs the estimated area
