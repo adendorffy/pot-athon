@@ -1,18 +1,21 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold, cross_val_score
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import make_scorer, mean_squared_error
+
 df = pd.read_csv('train_features.csv')
 df = df.dropna(subset=['Bags'])
 X = df[['Width', 'Height']]
 y = df['Bags']
+poly = PolynomialFeatures(degree=2)
+X_poly = poly.fit_transform(X)
+
 model = LinearRegression()
-model.fit(X, y)
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
 
-test_df = pd.read_csv('test_features.csv')
-predictions = model.predict(test_df[['Width', 'Height']])
+mse_scorer = make_scorer(mean_squared_error)
+cv_scores = cross_val_score(model, X_poly, y, cv=kf, scoring=mse_scorer)
+print(f'Mean Cross-Validation MSE: {cv_scores.mean()}')
 
-output_df = pd.DataFrame()
-output_df['Pothole number']=test_df[['ID']]
-output_df['Bags used'] = predictions
-output_df.to_csv('test_predictions.csv', index=False)
+
