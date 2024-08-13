@@ -1,8 +1,8 @@
 import os
 from ultralytics import YOLO
-model = YOLO('/home/karen/Desktop/HACKATHON/pot-athon/fine-tune-training/runs/detect/train19/weights/best.pt')
-test_images_dir = 'raw_images'
-output_annotation_dir = 'results/annotation'
+model = YOLO('/home/karen/Desktop/HACKATHON/clean clone/pot-athon/fine-tune-training/runs/detect/train20/weights/best.pt')
+test_images_dir = '/home/karen/Desktop/HACKATHON/clean clone/pot-athon/imgs'
+output_annotation_dir = 'results'
 
 
 def save_yolo_format(result, file_path):
