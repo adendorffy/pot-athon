@@ -91,8 +91,8 @@ def get_real_dimensions(image_path, annotation_path):
     
     return pothole_area_cm2, real_width, real_height,ratio
 
-image_dir = "data/test_images"
-annotation_dir = "data/test-annotations"
+image_dir = "data/train_images"
+annotation_dir = "data/train-annotations"
 labels_csv = "data/train_labels.csv"
 
 mask_rcnn_model = torchvision.models.detection.maskrcnn_resnet50_fpn(weights=MaskRCNN_ResNet50_FPN_Weights.DEFAULT)
@@ -114,6 +114,7 @@ for image_file in glob.glob(image_dir+"/*.jpg"):
     data.append({
         "ID": image_number,
         "Area": pothole_area,
+        "BoundingBoxArea": real_height*real_width,
         "Width": real_width,
         "Height": real_height,
         "Ratio":ratio,
@@ -122,13 +123,15 @@ for image_file in glob.glob(image_dir+"/*.jpg"):
     print({
         "ID": image_number,
         "Area": pothole_area,
+        "BoundingBoxArea": real_height*real_width,
         "Width": real_width,
         "Height": real_height,
         "Ratio":ratio,
-        "Bags": bags
+        "Bags": bags,
+
     })
     
         
 df = pd.DataFrame(data)
-output_csv = "test_area_features.csv"
+output_csv = "train_area_features.csv"
 df.to_csv(output_csv, index=False)
