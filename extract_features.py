@@ -84,7 +84,7 @@ def get_real_dimensions(image_path, annotation_path):
     annotations=None
     with open(annotation_path, 'r') as f: annotations = f.readlines()
     stick_length_pixels = get_stick_length_pixels(image, annotations) # length in pixels (area)
-    #pothole_area_pixels = get_pothole_area_pixels(image, annotations) # pothole area in pixels (area)
+    pothole_area_pixels = get_pothole_area_pixels(image, annotations) # pothole area in pixels (area)
     pothole_area_pixels=1
     pothole_area_cm2, ratio = convert_pothole_area(pothole_area_pixels, stick_area, stick_length_pixels)
     real_width, real_height = convert_pothole_height_width(stick_area, stick_length_pixels, annotations, image)
@@ -113,7 +113,7 @@ for image_file in glob.glob(image_dir+"/*.jpg"):
         bags = None       
     data.append({
         "ID": image_number,
-      #  "Area": pothole_area,
+        "Area": pothole_area,
         "Width": real_width,
         "Height": real_height,
         "Ratio":ratio,
@@ -121,7 +121,7 @@ for image_file in glob.glob(image_dir+"/*.jpg"):
     })
     print({
         "ID": image_number,
-       # "Area": pothole_area,
+        "Area": pothole_area,
         "Width": real_width,
         "Height": real_height,
         "Ratio":ratio,
