@@ -8,6 +8,7 @@ import torchvision
 from torchvision.models.detection import MaskRCNN_ResNet50_FPN_Weights
 
 def get_stick_length_pixels(image, annotations):
+    #print("Inside get_stick_length_pixels function")
     stick_length_pixels=0
     for annotation in annotations:
         components = annotation.strip().split()
@@ -17,9 +18,11 @@ def get_stick_length_pixels(image, annotations):
             height = float(stick_annotation[4])
             image_height, image_width, _ = image.shape
             stick_length_pixels = np.sqrt((width*image_width)**2 + (height*image_height)**2)
+    #print(f"Stick length (pixels): {stick_length_pixels}")
     return stick_length_pixels
 
 def get_pothole_area_pixels(image, annotations):
+    #print("Inside get_pothole_area_pixels function")
     for annotation in annotations:
         if annotation.startswith("0"):
             pothole_annotation = annotation.strip().split()
@@ -49,6 +52,7 @@ def get_pothole_area_pixels(image, annotations):
             if filtered_masks:
                 pothole_mask = filtered_masks[0][0].mul(255).byte().cpu().numpy()
                 pothole_area_pixels = np.sum(pothole_mask > 0)
+                #print(f"Pothole area (pixels): {pothole_area_pixels}")
                 return pothole_area_pixels
             else: 
                 if masks.shape[0]>0:
@@ -57,8 +61,11 @@ def get_pothole_area_pixels(image, annotations):
                     return 1.0
             
 def convert_pothole_area(pothole_area_pixels, stick_area_cm, stick_area_pixels):
-    pixel_to_cm_ratio = stick_area_cm / stick_area_pixels # cm^2/pix
-    pothole_area_cm2 = pothole_area_pixels * pixel_to_cm_ratio # pixels*(cm^2/pixels) = cm^2
+    if stick_area_pixels == 0:
+        print("Warning: Stick area in pixels is zero. Cannot calculate pixel-to-cm ratio.")
+        return None, None  # Return None to indicate a problem
+    pixel_to_cm_ratio = stick_area_cm / stick_area_pixels  # cm^2/pix
+    pothole_area_cm2 = pothole_area_pixels * pixel_to_cm_ratio  # pixels*(cm^2/pixels) = cm^2
     return pothole_area_cm2, pixel_to_cm_ratio
 
 def convert_pothole_height_width(stick_area, stick_length_pixels, annotations, image):    
@@ -82,16 +89,33 @@ def get_real_dimensions(image_path, annotation_path):
     stick_area = 50*4
     image = cv2.imread(image_path)
     annotations=None
-    with open(annotation_path, 'r') as f: annotations = f.readlines()
+
+    try:
+        with open(annotation_path, 'r') as f:
+            annotations = f.readlines()
+    except FileNotFoundError:
+        print(f"Annotation file not found: {annotation_path}")
+        return None, None, None, None
+
+    #with open(annotation_path, 'r') as f: annotations = f.readlines()
+    #print(f"Annotations: {annotations}")
     stick_length_pixels = get_stick_length_pixels(image, annotations) # length in pixels (area)
     pothole_area_pixels = get_pothole_area_pixels(image, annotations) # pothole area in pixels (area)
-    pothole_area_pixels=1
+
+    if stick_length_pixels == 0:
+        print(f"Warning: Stick length in pixels is zero for image {image_path}. Skipping this image.")
+        return None, None, None, None
+    
     pothole_area_cm2, ratio = convert_pothole_area(pothole_area_pixels, stick_area, stick_length_pixels)
+
+    if pothole_area_cm2 is None:
+        return None, None, None, None
+    
     real_width, real_height = convert_pothole_height_width(stick_area, stick_length_pixels, annotations, image)
     
     return pothole_area_cm2, real_width, real_height,ratio
 
-image_dir = "data/train_images"
+image_dir = "data/train_images/train_images"
 annotation_dir = "data/train-annotations"
 labels_csv = "data/train_labels.csv"
 
@@ -99,13 +123,41 @@ mask_rcnn_model = torchvision.models.detection.maskrcnn_resnet50_fpn(weights=Mas
 mask_rcnn_model.eval()
 
 labels_df = pd.read_csv(labels_csv)
+#print("Labels CSV loaded:")
+#print(labels_df.head())
 data = []
+
+test_image_path = "data/train_images/train_images/p38.jpg"  # Replace with an actual image path
+test_annotation_path = "data/train-annotations/p38.txt"  # Replace with an actual annotation path
+
+pothole_area, real_width, real_height, ratio = get_real_dimensions(test_image_path, test_annotation_path)
+print(f"Test results: Area: {pothole_area}, Width: {real_width}, Height: {real_height}, Ratio: {ratio}")
+
+
+#print(f"Contents of {image_dir}:")
+#print(os.listdir(image_dir))
+
+image_files = glob.glob(image_dir + "/*.jpg")
+#print(f"Found {len(image_files)} image files.")
+
+if not image_files:
+    print(f"No image files found in {image_dir}")
+
+print(f"Starting to process images in {image_dir}")
 
 for image_file in glob.glob(image_dir+"/*.jpg"):
     image_path = os.path.join(image_file)
+    #print(f"Processing image: {image_path}")
     image_number = int((image_path.rsplit("/")[-1]).replace(".jpg", "").replace("p", ""))
     annotation_path = annotation_dir + "/p" + str(image_number) + ".txt"
+    #print(f"Annotation file: {annotation_path}")
     pothole_area, real_width, real_height, ratio = get_real_dimensions(image_path, annotation_path)
+
+    if pothole_area is None:
+        # Skip this image if no valid annotation is found
+        print(f"Skipping image {image_path} due to missing annotation.")
+        continue
+
     label_row = labels_df[labels_df['Pothole number'] == image_number]
     if not label_row.empty:
         bags = label_row['Bags'].values[0]
@@ -120,18 +172,27 @@ for image_file in glob.glob(image_dir+"/*.jpg"):
         "Ratio":ratio,
         "Bags": bags
     })
-    print({
-        "ID": image_number,
-        "Area": pothole_area,
-        "BoundingBoxArea": real_height*real_width,
-        "Width": real_width,
-        "Height": real_height,
-        "Ratio":ratio,
-        "Bags": bags,
+    #print({
+     #   "ID": image_number,
+      #  "Area": pothole_area,
+       # "BoundingBoxArea": real_height*real_width,
+        #"Width": real_width,
+       # "Height": real_height,
+       # "Ratio":ratio,
+       # "Bags": bags,
 
-    })
+    #})
     
-        
+#print(f"Collected data: {data}")    
 df = pd.DataFrame(data)
+
+# Check if DataFrame is empty
+if df.empty:
+    print("The DataFrame is empty. No data was collected.")
+else:
+    print("Data collected successfully. Saving to CSV.")
+    output_csv = "train_area_features.csv"
+    df.to_csv(output_csv, index=False)
+
 output_csv = "train_area_features.csv"
 df.to_csv(output_csv, index=False)
