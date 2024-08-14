@@ -5,3 +5,4 @@ train_annotations/
 yolov8-env/
 data/test_images/
 data/train_images/
+train_images_with_supp.zip
