@@ -10,7 +10,7 @@ test_data = df[df['type'] == 'test'].drop(columns=['type'])
 
 df=train_data
 df = df.dropna(subset=['Bags'])
-X=df[['BoundingBoxArea','Width','Height','feature_1039','feature_1409']]
+X=df[['BoundingBoxArea','Width','Height','feature_1039','feature_1409','feature_1567','feature_126','feature_1484']]
 #'Area','feature_1039','feature_1409','feature_1567','feature_126','feature_1484','feature_975','feature_994','feature_42','feature_1864','feature_1118','feature_445','feature_1118', 'feature_409'
 y = df['Bags']
 poly = PolynomialFeatures(degree=1)
@@ -27,7 +27,7 @@ print(f'Mean Cross-Validation MSE: {cv_scores.mean()}')
 model.fit(X_poly, y)
 test_df = pd.read_csv('test_area_features_resNet.csv')
 test_df=test_data
-X_test = test_df[['BoundingBoxArea', 'Width', 'Height','feature_1039','feature_1409']]
+X_test = test_df[['BoundingBoxArea','Width','Height','feature_1039','feature_1409','feature_1567','feature_126','feature_1484']]
 
 
 X_test_poly = poly.transform(X_test)
