@@ -9,9 +9,9 @@ df = pd.read_csv('train_area_features.csv')
 df = df.dropna(subset=['Bags'])
 
 # Split the data
-X = df[['Area']]
+X=df[['BoundingBoxArea','Width','Height','Area']]
 y = df['Bags']
-df['Area'] = X
+df[['BoundingBoxArea','Width','Height','Area']] = X
 df['Bags'] = y
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 

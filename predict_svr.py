@@ -10,7 +10,7 @@ df = pd.read_csv('train_area_features.csv')
 df = df.dropna(subset=['Bags'])
 
 # Define the features and target
-X = df[['Area']]
+X = df[['BoundingBoxArea','Width','Height','Area']]
 y = df['Bags']
 
 # Split the data into training and testing sets (80/20 split)
@@ -22,7 +22,7 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 # Define the kernels to try
-kernels = ['linear', 'poly', 'rbf', 'sigmoid']
+kernels = ['linear', 'rbf', 'sigmoid']
 
 # Define the range of hyperparameters to test
 C_values = [0.1, 1, 10, 100]

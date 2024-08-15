@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 # Load and prepare the data
 df = pd.read_csv('train_area_features.csv')
 df = df.dropna(subset=['Bags'])
-X = df[['Area']]
+X=df[['BoundingBoxArea','Width','Height','Area']]
 y = df['Bags']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -53,7 +53,7 @@ from sklearn.model_selection import train_test_split
 # Load and prepare the data
 df = pd.read_csv('train_area_features.csv')
 df = df.dropna(subset=['Bags'])
-X = df[['Area']]
+X=df[['BoundingBoxArea','Width','Height','Area']]
 y = df['Bags']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -88,7 +88,7 @@ from sklearn.model_selection import train_test_split
 # Load and prepare the data
 df = pd.read_csv('train_area_features.csv')
 df = df.dropna(subset=['Bags'])
-X = df[['Area']]
+X=df[['BoundingBoxArea','Width','Height','Area']]
 y = df['Bags']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -115,7 +115,7 @@ from sklearn.model_selection import train_test_split
 # Load and prepare the data
 df = pd.read_csv('train_area_features.csv')
 df = df.dropna(subset=['Bags'])
-X = df[['Area']]
+X=df[['BoundingBoxArea','Width','Height','Area']]
 y = df['Bags']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -142,7 +142,7 @@ df = pd.read_csv('train_area_features.csv')
 df = df.dropna(subset=['Bags'])
 
 # Split the data
-X = df[['Area']]
+X=df[['BoundingBoxArea','Width','Height','Area']]
 y = df['Bags']
 X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
 X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
