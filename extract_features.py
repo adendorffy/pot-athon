@@ -8,7 +8,7 @@ import torchvision
 from torchvision.models.detection import MaskRCNN_ResNet50_FPN_Weights
 
 def get_stick_length_pixels(image, annotations):
-    stick_length_pixels=0
+    stick_length_pixels=1
     for annotation in annotations:
         components = annotation.strip().split()
         if (components[0]=='1'):
@@ -22,6 +22,7 @@ def get_stick_length_pixels(image, annotations):
 def get_pothole_area_pixels(image, annotations):
     mask_rcnn_model = torchvision.models.detection.maskrcnn_resnet50_fpn(weights=MaskRCNN_ResNet50_FPN_Weights.DEFAULT)
     mask_rcnn_model.eval()
+    roi_area = 1
     
     for annotation in annotations:
         if annotation.startswith("0"):
@@ -39,6 +40,7 @@ def get_pothole_area_pixels(image, annotations):
 
             roi = image[y_min:y_max, x_min:x_max]
             roi_rgb = cv2.cvtColor(roi, cv2.COLOR_BGR2RGB)
+            roi_area=(height*image_height)*(width*image_width)
 
             input = torch.tensor(roi_rgb).permute(2,0,1).unsqueeze(0)/255
             with torch.no_grad():
@@ -57,8 +59,7 @@ def get_pothole_area_pixels(image, annotations):
                 pothole_area_pixels = np.sum(final_mask_np)
                 return pothole_area_pixels
             else: 
-                return (height*image_height)*(width*image_width)
-                
+                return roi_area                
             
 def convert_pothole_area(pothole_area_pixels, stick_area_cm, stick_area_pixels):
     pixel_to_cm_ratio = stick_area_cm / stick_area_pixels # cm^2/pix
@@ -88,19 +89,19 @@ def get_real_dimensions(image_path, annotation_path):
     annotations=None
     with open(annotation_path, 'r') as f: annotations = f.readlines()
     stick_length_pixels = get_stick_length_pixels(image, annotations) # length in pixels (area)
-    real_width, real_height = convert_pothole_height_width(stick_area, stick_length_pixels, annotations, image)
     pothole_area_pixels = get_pothole_area_pixels(image, annotations) # pothole area in pixels (area)
+    if pothole_area_pixels is None: pothole_area_pixels = 1
     pothole_area_cm2, ratio = convert_pothole_area(pothole_area_pixels, stick_area, stick_length_pixels)
     real_width, real_height = convert_pothole_height_width(stick_area, stick_length_pixels, annotations, image)
     
     return pothole_area_cm2, real_width, real_height, ratio
 
 def process_image(image_path, annotation_dir, labels_df):
-    image_number = int((image_path.rsplit("/")[-1]).replace(".jpg", "").replace("p", ""))
+    image_number = ((image_path.rsplit("/")[-1]).replace(".jpg", "").rsplit("_")[0].replace("p",""))
     annotation_path = os.path.join(annotation_dir, f"p{image_number}.txt")
     pothole_area, real_width, real_height, ratio = get_real_dimensions(image_path, annotation_path)
     annotation_path = annotation_dir + "/p" + str(image_number) + ".txt"
-    label_row = labels_df[labels_df['Pothole number'] == image_number]
+    label_row = labels_df[labels_df['Pothole number'] == image_number.rsplit("_")[0]]
     bags = label_row['Bags'].values[0] if not label_row.empty else None
     
     return {

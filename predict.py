@@ -15,14 +15,14 @@ def train_lr_model(df, degree=2):
     mse_scorer = make_scorer(mean_squared_error)
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
 
-    poly_lr = PolynomialFeatures(degree=1)
+    poly_lr = PolynomialFeatures(degree=2)
     X_poly_lr = poly_lr.fit_transform(X)
     model_lr = LinearRegression()
     cv_scores = cross_val_score(model_lr, X_poly_lr, y=y, cv=kf, scoring=mse_scorer)
     model_lr.fit(X_poly_lr, y)
     print(f'Mean Cross-Validation MSE LR: {cv_scores.mean()}')
 
-    poly_ridge = PolynomialFeatures(degree=1)
+    poly_ridge = PolynomialFeatures(degree=2)
     X_poly_ridge = poly_ridge.fit_transform(X)
     model_ridge = Ridge(alpha=50.0)
     cv_scores = cross_val_score(model_ridge, X_poly_ridge, y, cv=kf, scoring=mse_scorer)
@@ -52,30 +52,30 @@ def evaluate_lr_model(df, degree=2):
 
     return df
 
-# # # Train
-# image_dir = "data/train_images/train_images"
-# annotation_dir = "data/train-annotations"
-# labels_csv = "data/train_labels.csv"
-# features_csv = "train_area_features.csv"
+# # Train
+image_dir = "data_augmented/train_images/"
+annotation_dir = "data_augmented/train_annotations"
+labels_csv = "data/train_labels.csv"
+features_csv = "train_area_features_augmented.csv"
 
-# Test
-image_dir = "data/test_images/test_images"
-annotation_dir = "data/test-annotations"
-labels_csv = "data/test_labels.csv"
-features_csv = "test_area_features.csv"
+# # Test
+# image_dir = "data/test_images/test_images"
+# annotation_dir = "data/test-annotations"
+# labels_csv = "data/test_labels.csv"
+# features_csv = "test_area_features.csv"
 
 def generate_features(image_dir, annotation_dir, labels_csv, features_csv):
     labels_df = pd.read_csv(labels_csv)
     data = []
 
     for image_file in glob.glob(image_dir+"/*.jpg"):
-        print(image_file)
-        result = process_image(image_file, annotation_dir, labels_df)           
+        result = process_image(image_file, annotation_dir, labels_df)   
+        print(result)        
         data.append(result)
             
     df_test = pd.DataFrame(data)
     df_test.to_csv(features_csv, index=False)
 
-# generate_features(image_dir, annotation_dir, labels_csv, features_csv)
-train_lr_model(pd.read_csv("train_area_features.csv"), 2)
-evaluate_lr_model(pd.read_csv("test_area_features.csv"), 2)
+generate_features(image_dir, annotation_dir, labels_csv, features_csv)
+# train_lr_model(pd.read_csv("train_area_features.csv"), 2)
+# evaluate_lr_model(pd.read_csv("test_area_features.csv"), 2)
