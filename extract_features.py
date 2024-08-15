@@ -98,18 +98,15 @@ def get_real_dimensions(image_path, annotation_path):
 def process_image(image_path, annotation_dir, labels_df):
     image_number = int((image_path.rsplit("/")[-1]).replace(".jpg", "").replace("p", ""))
     annotation_path = os.path.join(annotation_dir, f"p{image_number}.txt")
-    pothole_area, real_width, real_height = get_real_dimensions(image_path, annotation_path)
-    annotation_path = annotation_dir + "/p" + str(image_number) + ".txt"
     pothole_area, real_width, real_height, ratio = get_real_dimensions(image_path, annotation_path)
+    annotation_path = annotation_dir + "/p" + str(image_number) + ".txt"
     label_row = labels_df[labels_df['Pothole number'] == image_number]
     bags = label_row['Bags'].values[0] if not label_row.empty else None
     
     return {
         "ID": image_number,
         "Area": pothole_area,
-        "BoundingBoxArea": real_height*real_width,
         "Width": real_width,
         "Height": real_height,
-        "Ratio":ratio,
         "Bags": bags
     }

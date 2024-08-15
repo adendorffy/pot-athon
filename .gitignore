@@ -1,7 +1,7 @@
 .DS_Store
 test_images/
 train_images/
-train_annotations/
+data/train_annotations/
 yolov8-env/
 data/test_images/
 data/train_images/
