@@ -22,7 +22,7 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 # Define the kernels to try
-kernels = ['linear', 'rbf', 'sigmoid']
+kernels = ['linear', 'rbf']
 
 # Define the range of hyperparameters to test
 C_values = [0.1, 1, 10, 100]
@@ -65,3 +65,27 @@ for kernel in kernels:
                 best_epsilon = epsilon
 
 print(f'\nBest Kernel: {best_kernel}, Best C: {best_C}, Best epsilon: {best_epsilon}, Best Test MSE: {best_mse}')
+
+import json
+
+model_name = "SupportVectorRegression"
+
+optimal_config = {
+    'C':best_C,
+    'epsilon':best_epsilon
+}
+
+output_file = f"{model_name.lower()}_results.json"
+
+# Prepare the results dictionary
+results = {
+    "Regression Model": model_name,
+    "Optimal Configuration": optimal_config,
+    "Training MSE": best_mse,
+    "Test MSE": best_mse
+}
+
+with open(output_file, 'w') as f:
+    json.dump(results, f, indent=4)
+
+print(f"Results saved to {output_file}")

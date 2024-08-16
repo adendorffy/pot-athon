@@ -1,0 +1,9 @@
+{
+    "Regression Model": "kNNRegression",
+    "Optimal Configuration": {
+        "n_neighbors": 10,
+        "p": 2
+    },
+    "Training MSE": 0.9581016871165643,
+    "Test MSE": 0.3667375
+}

@@ -65,3 +65,29 @@ for n_estimators in n_estimators_options:
 print(f'Best Hyperparameters: {best_params}')
 print(f'Best Test MSE: {best_mse}')
 print(f'Train MSE of Best Model: {best_train_mse}')
+
+import json
+
+model_name = "RandomForestRegression"
+
+optimal_config = {
+    'n_estimators': n_estimators,
+    'max_depth': max_depth,
+    'min_samples_split': min_samples_split
+}
+
+output_file = f"{model_name.lower()}_results.json"
+
+# Prepare the results dictionary
+results = {
+    "Regression Model": model_name,
+    "Optimal Configuration": optimal_config,
+    "Training MSE": best_train_mse,
+    "Test MSE": best_mse
+}
+
+with open(output_file, 'w') as f:
+    json.dump(results, f, indent=4)
+
+print(f"Results saved to {output_file}")
+

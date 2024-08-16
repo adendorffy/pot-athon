@@ -1,0 +1,1 @@
+{'model': 'Logistic Regression', 'accuracy': {'train_accuracy': 0.48006134969325154, 'test_accuracy': 0.5792682926829268}}

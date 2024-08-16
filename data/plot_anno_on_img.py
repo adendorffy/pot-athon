@@ -51,7 +51,7 @@ def plot_annotations(image_dir, annotation_dir, output_dir, classes):
         cv2.imwrite(output_path, image)
 
 # Define paths
-train_image_dir = 'train_images'
+train_image_dir = 'train_images/train_images'
 train_annotation_dir = 'train-annotations'
 train_output_dir = 'annotated-images/train'
 

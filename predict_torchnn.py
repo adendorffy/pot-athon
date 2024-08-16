@@ -103,3 +103,29 @@ for hidden_dim1, hidden_dim2 in hidden_dims:
 # Find the best hyperparameters
 best_result = min(results, key=lambda x: x['test_mse'])
 print(f'Best Hyperparameters: {best_result}')
+
+import json
+
+model_name = "TorchNeuralNetwork"
+
+optimal_config = {
+    'hidden_dim1': hidden_dim1,
+    'hidden_dim2': hidden_dim2,
+    'learning_rate': lr,
+    'batch_size': batch_size
+}
+
+output_file = f"{model_name.lower()}_results.json"
+
+# Prepare the results dictionary
+results = {
+    "Regression Model": model_name,
+    "Optimal Configuration": optimal_config,
+    "Training MSE": train_mse,
+    "Test MSE": test_mse
+}
+
+with open(output_file, 'w') as f:
+    json.dump(results, f, indent=4)
+
+print(f"Results saved to {output_file}")

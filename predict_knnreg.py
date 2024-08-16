@@ -41,8 +41,8 @@ for n_neighbors in n_neighbors_options:
         test_mse = mean_squared_error(y_test, y_pred_test)
 
         # Print the MSE for this combination of hyperparameters
-        print(f'Params: n_neighbors={n_neighbors}, p={p}')
-        print(f'Train MSE: {train_mse:.5f}, Test MSE: {test_mse:.5f}\n')
+        #print(f'Params: n_neighbors={n_neighbors}, p={p}')
+        #print(f'Train MSE: {train_mse:.5f}, Test MSE: {test_mse:.5f}\n')
 
         # Check if this is the best model so far
         if test_mse < best_mse:
@@ -57,3 +57,27 @@ for n_neighbors in n_neighbors_options:
 print(f'Best Hyperparameters: {best_params}')
 print(f'Best Test MSE: {best_mse}')
 print(f'Train MSE of Best Model: {best_train_mse}')
+
+import json
+
+model_name = "kNNRegression"
+
+optimal_config = {
+    'n_neighbors': n_neighbors,
+    'p': p
+}
+
+output_file = f"{model_name.lower()}_results.json"
+
+# Prepare the results dictionary
+results = {
+    "Regression Model": model_name,
+    "Optimal Configuration": optimal_config,
+    "Training MSE": best_train_mse,
+    "Test MSE": best_mse
+}
+
+with open(output_file, 'w') as f:
+    json.dump(results, f, indent=4)
+
+print(f"Results saved to {output_file}")

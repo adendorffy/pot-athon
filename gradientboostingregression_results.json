@@ -1,0 +1,10 @@
+{
+    "Regression Model": "GradientBoostingRegression",
+    "Optimal Configuration": {
+        "n_estimators": 200,
+        "learning_rate": 0.2,
+        "max_depth": 7
+    },
+    "Training MSE": 1.0664836114016514,
+    "Test MSE": 0.2967313766485469
+}

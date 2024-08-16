@@ -1,0 +1,9 @@
+{
+    "Regression Model": "ElasticNetRegression",
+    "Optimal Configuration": {
+        "alpha": 10.0,
+        "l1 ratio": 0.9
+    },
+    "Training MSE": 1.0226656569604253,
+    "Test MSE": 0.3268042135361093
+}

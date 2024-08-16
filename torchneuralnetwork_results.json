@@ -1,0 +1,11 @@
+{
+    "Regression Model": "TorchNeuralNetwork",
+    "Optimal Configuration": {
+        "hidden_dim1": 64,
+        "hidden_dim2": 64,
+        "learning_rate": 0.1,
+        "batch_size": 30
+    },
+    "Training MSE": 1.6462104568401819,
+    "Test MSE": 0.41350637225299214
+}

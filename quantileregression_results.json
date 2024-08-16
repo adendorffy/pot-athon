@@ -1,0 +1,8 @@
+{
+    "Regression Model": "QuantileRegression",
+    "Optimal Configuration": {
+        "quantile": 0.9
+    },
+    "Training MSE": 1.2067097162971299,
+    "Test MSE": 0.28085942500276595
+}

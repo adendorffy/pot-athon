@@ -1,0 +1,10 @@
+{
+    "Regression Model": "RandomForestRegression",
+    "Optimal Configuration": {
+        "n_estimators": 200,
+        "max_depth": 30,
+        "min_samples_split": 10
+    },
+    "Training MSE": 0.2956197460296553,
+    "Test MSE": 0.4352653335551175
+}

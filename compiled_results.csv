@@ -1,0 +1,10 @@
+Regression Model,Optimal Configuration,Training MSE,Test MSE
+BayesRegression,"{'alpha': 0.1, 'lambda': 0.1}",1.0117104451569798,0.33265653986834326
+ElasticNetRegression,"{'alpha': 10.0, 'l1 ratio': 0.9}",1.0226656569604253,0.3268042135361093
+GammaRegression,"{'alpha': 10.0, 'link function': 'Identity'}",1.6457623412731788,0.3857761482177096
+GradientBoostingRegression,"{'n_estimators': 200, 'learning_rate': 0.2, 'max_depth': 7}",1.0664836114016514,0.2967313766485469
+kNNRegression,"{'n_neighbors': 10, 'p': 2}",0.9581016871165643,0.3667375
+QuantileRegression,{'quantile': 0.9},1.2067097162971299,0.28085942500276595
+RandomForestRegression,"{'n_estimators': 200, 'max_depth': 30, 'min_samples_split': 10}",0.2956197460296553,0.4352653335551175
+SupportVectorRegression,"{'C': 0.1, 'epsilon': 0.1}",0.24696158536585366,0.24696158536585366
+TorchNeuralNetwork,"{'hidden_dim1': 64, 'hidden_dim2': 64, 'learning_rate': 0.1, 'batch_size': 30}",1.6462104568401819,0.41350637225299214

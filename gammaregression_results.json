@@ -1,0 +1,9 @@
+{
+    "Regression Model": "GammaRegression",
+    "Optimal Configuration": {
+        "alpha": 10.0,
+        "link function": "Identity"
+    },
+    "Training MSE": 1.6457623412731788,
+    "Test MSE": 0.3857761482177096
+}

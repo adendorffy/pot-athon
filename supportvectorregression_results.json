@@ -1,0 +1,9 @@
+{
+    "Regression Model": "SupportVectorRegression",
+    "Optimal Configuration": {
+        "C": 0.1,
+        "epsilon": 0.1
+    },
+    "Training MSE": 0.24696158536585366,
+    "Test MSE": 0.24696158536585366
+}

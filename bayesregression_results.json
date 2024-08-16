@@ -1,0 +1,9 @@
+{
+    "Regression Model": "BayesRegression",
+    "Optimal Configuration": {
+        "alpha": 0.1,
+        "lambda": 0.1
+    },
+    "Training MSE": 1.0117104451569798,
+    "Test MSE": 0.33265653986834326
+}
