@@ -122,6 +122,20 @@ features_csv = "train_area_features_augmented.csv"
 # labels_csv = "data/test_labels.csv"
 # features_csv = "test_area_features.csv"
 
+def write_kaggle_submission(ridge_better=True):
+    df = pd.read_csv('test_area_features.csv')
+    if ridge_better:
+        print("Writing Kaggle submission with Ridge predictions...")
+        df['Bags used'] = df['Bags_ridge']
+    else:
+        print("Writing Kaggle submission with Linear Regression predictions...")
+        df['Bags used'] = df['Bags_lr']
+    df['Pothole number'] = df['ID']
+    # Correct way to create a new DataFrame with selected columns
+    submission_df = df[['Pothole number', 'Bags used']]
+    submission_df.to_csv('kaggle_submission.csv', index=False)
+
+
 def generate_features(image_dir, annotation_dir, labels_csv, features_csv):
     """
     Generate feature data from images and annotations, and save it to a CSV file.
@@ -154,3 +168,4 @@ generate_features(image_dir, annotation_dir, labels_csv, features_csv)
 # Uncomment the following lines to train and evaluate models
 train_lr_model(pd.read_csv("train_area_features.csv"),10, 2)
 evaluate_lr_model(pd.read_csv("test_area_features.csv"), 2)
+write_kaggle_submission(False)
