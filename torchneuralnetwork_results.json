@@ -6,6 +6,6 @@
         "learning_rate": 0.1,
         "batch_size": 30
     },
-    "Training MSE": 1.6462104568401819,
-    "Test MSE": 0.41350637225299214
+    "Training MSE": 0.8143112883394473,
+    "Test MSE": 0.27886462969682496
 }

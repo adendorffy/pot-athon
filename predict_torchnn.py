@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -11,8 +11,10 @@ from torch.utils.data import TensorDataset, DataLoader
 df = pd.read_csv('train_area_features.csv')
 df = df.dropna(subset=['Bags'])
 
+df = df[df['Area'] <= 10000]
+
 # Split the data
-X = df[['BoundingBoxArea','Width','Height','Area']].values
+X = df[['Area']].values
 y = df['Bags'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -85,7 +87,9 @@ for hidden_dim1, hidden_dim2 in hidden_dims:
                 y_pred_test = model(X_test_tensor).squeeze().numpy()
 
             train_mse = mean_squared_error(y_train, y_pred_train)
+            train_r2 = r2_score(y_train, y_pred_train)
             test_mse = mean_squared_error(y_test, y_pred_test)
+            test_r2 = r2_score(y_test, y_pred_test)
 
             # Store results
             results.append({
@@ -99,6 +103,7 @@ for hidden_dim1, hidden_dim2 in hidden_dims:
 
             print(f'Hidden Layers: {hidden_dim1}, {hidden_dim2} | LR: {lr} | Batch Size: {batch_size}')
             print(f'Train MSE: {train_mse:.5f}, Test MSE: {test_mse:.5f}\n')
+            print(f'Train R2: {train_r2:.5f}, Test R2: {test_r2:.5f}\n')
 
 # Find the best hyperparameters
 best_result = min(results, key=lambda x: x['test_mse'])
