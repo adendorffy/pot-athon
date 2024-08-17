@@ -87,27 +87,30 @@ def get_real_dimensions(image_path, annotation_path):
     stick_area = 50*4
     image = cv2.imread(image_path)
     annotations=None
-    with open(annotation_path, 'r') as f: annotations = f.readlines()
-    stick_length_pixels = get_stick_length_pixels(image, annotations) # length in pixels (area)
-    pothole_area_pixels = get_pothole_area_pixels(image, annotations) # pothole area in pixels (area)
-    if pothole_area_pixels is None: pothole_area_pixels = 1
-    pothole_area_cm2, ratio = convert_pothole_area(pothole_area_pixels, stick_area, stick_length_pixels)
-    real_width, real_height = convert_pothole_height_width(stick_area, stick_length_pixels, annotations, image)
-    
-    return pothole_area_cm2, real_width, real_height, ratio
+    if os.path.exists(annotation_path):
+        with open(annotation_path, 'r') as f: annotations = f.readlines()
+        stick_length_pixels = get_stick_length_pixels(image, annotations) # length in pixels (area)
+        pothole_area_pixels = get_pothole_area_pixels(image, annotations) # pothole area in pixels (area)
+        if pothole_area_pixels is None: pothole_area_pixels = 1
+        pothole_area_cm2, ratio = convert_pothole_area(pothole_area_pixels, stick_area, stick_length_pixels)
+        real_width, real_height = convert_pothole_height_width(stick_area, stick_length_pixels, annotations, image)
+        
+        return pothole_area_cm2, real_width, real_height, ratio
 
 def process_image(image_path, annotation_dir, labels_df):
-    image_number = ((image_path.rsplit("/")[-1]).replace(".jpg", "").rsplit("_")[0].replace("p",""))
+    image_number = ((image_path.rsplit("/")[-1]).replace(".jpg", "").replace("p",""))
     annotation_path = os.path.join(annotation_dir, f"p{image_number}.txt")
-    pothole_area, real_width, real_height, ratio = get_real_dimensions(image_path, annotation_path)
-    annotation_path = annotation_dir + "/p" + str(image_number) + ".txt"
-    label_row = labels_df[labels_df['Pothole number'] == image_number.rsplit("_")[0]]
-    bags = label_row['Bags'].values[0] if not label_row.empty else None
-    
-    return {
-        "ID": image_number,
-        "Area": pothole_area,
-        "Width": real_width,
-        "Height": real_height,
-        "Bags": bags
-    }
+    result = get_real_dimensions(image_path, annotation_path)
+    if result is not None:
+        pothole_area, real_width, real_height, ratio = result
+        annotation_path = annotation_dir + "/p" + str(image_number) + ".txt"
+        label_row = labels_df[labels_df['Pothole number'] == image_number]
+        bags = label_row['Bags used'].values[0] if not label_row.empty else None
+        
+        return {
+            "ID": image_number,
+            "Area": pothole_area,
+            "Width": real_width,
+            "Height": real_height,
+            "Bags": bags
+        }

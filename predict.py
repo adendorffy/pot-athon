@@ -49,20 +49,7 @@ def evaluate_lr_model(df, degree=2):
     df['Bags_lr'] = y_lr
     df['Bags_ridge'] = y_ridge
     df.to_csv("test_area_features.csv", index=False)
-
     return df
-
-# # Train
-image_dir = "data_augmented/train_images/"
-annotation_dir = "data_augmented/train_annotations"
-labels_csv = "data/train_labels.csv"
-features_csv = "train_area_features_augmented.csv"
-
-# # Test
-# image_dir = "data/test_images/test_images"
-# annotation_dir = "data/test-annotations"
-# labels_csv = "data/test_labels.csv"
-# features_csv = "test_area_features.csv"
 
 def generate_features(image_dir, annotation_dir, labels_csv, features_csv):
     labels_df = pd.read_csv(labels_csv)
@@ -70,11 +57,24 @@ def generate_features(image_dir, annotation_dir, labels_csv, features_csv):
 
     for image_file in glob.glob(image_dir+"/*.jpg"):
         result = process_image(image_file, annotation_dir, labels_df)   
-        print(result)        
-        data.append(result)
+        if result is not None:
+            print(result)        
+            data.append(result)
             
     df_test = pd.DataFrame(data)
     df_test.to_csv(features_csv, index=False)
+
+# # Train
+image_dir = "data_2/train_images/"
+annotation_dir = "data_2/train_annotations"
+labels_csv = "data_2/train_labels.csv"
+features_csv = "train_features.csv"
+
+# # Test
+# image_dir = "data/test_images/test_images"
+# annotation_dir = "data/test-annotations"
+# labels_csv = "data/test_labels.csv"
+# features_csv = "test_area_features.csv"
 
 generate_features(image_dir, annotation_dir, labels_csv, features_csv)
 # train_lr_model(pd.read_csv("train_area_features.csv"), 2)
