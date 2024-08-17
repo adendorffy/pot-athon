@@ -3,5 +3,7 @@ test_images/
 train_images/
 yolov8-env/
 data/
+data_quality/
 data_augmented/
 models/
+annotated_data/
