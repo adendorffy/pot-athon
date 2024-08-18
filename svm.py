@@ -8,9 +8,9 @@ import joblib
 import matplotlib.pyplot as plt
 
 # Load the datasets
-test_df = pd.read_csv('data-v6/test/test.csv')
-train_df = pd.read_csv('data-v6/train/train.csv')
-valid_df = pd.read_csv('data-v6/valid/valid.csv')
+test_df = pd.read_csv('data-v6/test/test1.csv')
+train_df = pd.read_csv('data-v6/train/train1.csv')
+valid_df = pd.read_csv('data-v6/valid/valid1.csv')
 
 # Combine train and validation datasets
 train_df = pd.concat([train_df, valid_df])

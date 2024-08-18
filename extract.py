@@ -40,48 +40,49 @@ def create_csv_per_set(directories):
     stick_width_mm = 10
 
     # Stick area in square millimeters
-    stick_area_mm2 = stick_length_mm * stick_width_mm
     # Process each directory
     for directory in directories:
         # Load the _annotations.csv file
         annotations_file = os.path.join(directory, '_annotations.csv')
-        df = pd.read_csv(annotations_file)
-        
-        # Extract the pothole ID
-        df['pothole_id'] = df['filename'].str.extract(r'p(\d+)_')[0]
-        
-        # Calculate the area for each class
-        df['area'] = (df['xmax'] - df['xmin']) * (df['ymax'] - df['ymin'])
-        
-        # Pivot the data to get separate columns for pothole area and stick area
-        pivot_df = df.pivot_table(index='pothole_id', columns='class', values='area', aggfunc='first').reset_index()
-        
-        # Rename the columns for clarity
-        pivot_df = pivot_df.rename(columns={'potholes': 'pothole_area', 'L': 'stick_area'})
-        
-        # Save the result to a new CSV file
+        # Load the annotations
+        annotations = pd.read_csv(annotations_file)
+
+        # Create an empty list to store results
+        results = []
+
+        for _, row in annotations.iterrows():
+            filename = row['filename']
+            xmin, ymin, xmax, ymax = row['xmin'], row['ymin'], row['xmax'], row['ymax']
+            
+            # Extract pothole_number from filename
+            pothole_number = filename.split('_')[0][1:]
+            
+            # Calculate width and height of the bounding box
+            width = xmax - xmin
+            height = ymax - ymin
+            
+            # Calculate aspect ratio
+            aspect_ratio = width / height
+            
+            # Calculate the area
+            area = width * height
+            
+            # Append the result to the list
+            results.append({
+                'pothole_id': pothole_number,
+                'aspect_ratio': aspect_ratio,
+                'pothole_area_mm2': area
+            })
+            
+         # Save the result to a new CSV file
         output_file = os.path.join(directory, f'{os.path.basename(directory)}.csv')
 
-        print(f"Processed {annotations_file}")
-        
-        # Calculate the area of the stick in pixels (already computed in previous steps)
-        pivot_df['stick_area'] = pivot_df['stick_area'].fillna(1)  # To avoid division by zero or NaN
-        
-        # Calculate the conversion factor from pixels to mm²
-        pivot_df['conversion_factor'] = stick_area_mm2 / pivot_df['stick_area']
-        
-        # Convert the pothole area to square millimeters
-        pivot_df['pothole_area_mm2'] = pivot_df['pothole_area'] * pivot_df['conversion_factor']
-        
-        final_df = pivot_df.drop(['stick_area','pothole_area','conversion_factor'], axis=1)
-
-        # Save the updated DataFrame back to the CSV file
-        final_df.to_csv(output_file, index=False)
-
+        # Convert results to a DataFrame
+        results_df = pd.DataFrame(results)
+        print(results_df)
+        results_df.to_csv(output_file, index=False)
         print(f"Processed {output_file} and converted pothole areas to square millimeters.")
 
-import pandas as pd
-import os
 
 def add_labels(directories):
     combined_labels_df = pd.read_csv('combined_train_labels.csv')
@@ -108,3 +109,12 @@ if __name__ == "__main__":
     directories = ['data-v6/test', 'data-v6/train', 'data-v6/valid']
     create_csv_per_set(directories)
     add_labels(directories)
+    # Load the datasets
+    train_df = pd.read_csv('data-v6/train/train.csv')
+    valid_df = pd.read_csv('data-v6/valid/valid.csv')
+    test_df = pd.read_csv('data-v6/test/test.csv')
+
+    # Combine train, validation, and test datasets
+    full_df = pd.concat([train_df, valid_df, test_df])
+    full_df.to_csv('all_potholes.csv', index=False)
+

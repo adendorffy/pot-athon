@@ -9,13 +9,12 @@ import joblib
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.ensemble import StackingRegressor
 from sklearn.linear_model import LinearRegression
-from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
 
 # Load the datasets
-test_df = pd.read_csv('data-v6/test/test.csv')
-train_df = pd.read_csv('data-v6/train/train.csv')
-valid_df = pd.read_csv('data-v6/valid/valid.csv')
+test_df = pd.read_csv('data-v6/test/test1.csv')
+train_df = pd.read_csv('data-v6/train/train1.csv')
+valid_df = pd.read_csv('data-v6/valid/valid1.csv')
 
 # Combine train and validation datasets
 train_df = pd.concat([train_df, valid_df, test_df])
@@ -26,7 +25,7 @@ train_df = train_df.dropna()  # Remove rows with NaN values in the training set
 
 
 # Define the features and target variable
-X = train_df[['pothole_area_mm2']]
+X = train_df[['pothole_area_mm2', 'aspect_ratio']]
 y = train_df['Bags used ']
 
 # Perform the split
@@ -227,7 +226,7 @@ def optimize_random_forest(X_train, X_test, y_train, y_test):
     plt.show()
 
 if __name__ == "__main__":
-    # optimize_random_forest(X_train_scaled, X_test_scaled, y_train, y_test)
+    optimize_random_forest(X_train_scaled, X_test_scaled, y_train, y_test)
     neural_net()
-    # gradient_boost()
-    # stacking_regressor()
+    gradient_boost()
+    stacking_regressor()
