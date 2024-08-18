@@ -7,10 +7,10 @@ df = df.dropna(subset=['Bags'])
 df = df['Bags'].value_counts()
 
 plt.figure(figsize=(10, 6))
-plt.bar(df['Bags'], alpha=0.7)
-plt.title('Area vs. Bags')
+plt.scatter(df['BoundingBoxArea'],df['Area'], alpha=0.7)
+plt.title('Area vs. BoxArea')
 plt.xlabel('Area')
-plt.ylabel('Bags')
+plt.ylabel('BoxArea')
 plt.grid(True)
 plt.savefig('area_vs_bags.png')  # Save the plot as a PNG file
 
