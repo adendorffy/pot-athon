@@ -1,0 +1,3 @@
+Model,Optimal Configuration,Train MSE,Train R2,Test MSE,Test R2
+Ridge Regression,"{'alpha': 0.1, 'degree': 1}",0.8145192818400953,0.3169070371509022,1847206.8586932195,-201580.16458602753
+Lasso Regression,"{'alpha': 1.0, 'degree': 1}",1.1923988770764584,0.0,9.339497222513604,-0.019196479215180196
