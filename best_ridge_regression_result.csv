@@ -1,2 +1,2 @@
-Model,Optimal Configuration,Train MSE,Train R2,Test MSE,Test R2
-Ridge Regression,"{'alpha': 0.1, 'degree': 1}",0.8145192818400953,0.3169070371509022,1847206.8586932195,-201580.16458602753
+Model,Optimal Configuration,Train MSE (CV),Train R2,Test MSE,Test R2
+Ridge Regression,"{'alpha': 0.1, 'degree': 2}",0.8859639652710863,0.13592358374116234,9.037373620574261,-0.006382126750641426
