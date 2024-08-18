@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error, r2_score
 
 # Load the datasets
@@ -15,12 +16,24 @@ combined_df = pd.concat([train_df, valid_df])
 # Drop rows with NaN values
 combined_df = combined_df.dropna()
 
+combined_df = combined_df[combined_df['pothole_area_mm2'] <= 10000000]
+print(combined_df)
+
+# Plotting area vs. bags used
+plt.figure(figsize=(10, 6))
+plt.scatter(combined_df['pothole_area_mm2'], combined_df['Bags used '], color='blue', edgecolor='black', alpha=0.7)
+plt.title('Pothole Area vs. Bags Used')
+plt.xlabel('Pothole Area (mm²)')
+plt.ylabel('Bags Used')
+plt.grid(True)
+plt.show()
+
 # Features (X) and target (y)
 X = combined_df[['pothole_area_mm2']]
 y = combined_df['Bags used ']
 
 # Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Normalize the features
 scaler = StandardScaler()
@@ -41,7 +54,4 @@ r2 = r2_score(y_test, y_pred)
 print(f"Mean Squared Error: {mse}")
 print(f"R^2 Score: {r2}")
 
-final_test = pd.read_csv('their_test.csv')
-final_pred = model.predict(final_test[['pothole_area_mm2']])
-final_test['Bags used'] = final_pred.flatten()
-final_test.to_csv('predictions.csv', index=False)
+
